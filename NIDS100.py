@@ -73,20 +73,15 @@ X_test_seq = np.array(X_test_seq)
 # Create a deep learning model with LSTM layers for binary classification
 model = Sequential()
 model.add(LSTM(128, input_shape=(sequence_length, X_train_seq.shape[2]), return_sequences=True))
-model.add(Dropout(0.5))  # Add a dropout layer
 model.add(LSTM(64, return_sequences=True))
-model.add(Dropout(0.5))  # Add a dropout layer
 model.add(LSTM(32))
-model.add(Dropout(0.5))  # Add a dropout layer
-model.add(Dense(1, activation='sigmoid'))
+model.add(Dropout(0.5))
+model.add(Dense(1, activation='sigmoid'))  # Binary classification with one output unit and sigmoid activation
 
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-noise_factor = 0.1  # Adjust the noise factor as needed
-X_train_seq_noisy = X_train_seq + noise_factor * np.random.normal(0, 1, X_train_seq.shape)
-
-# Train the model with noisy input data
-model.fit(X_train_seq_noisy, y_train_seq, epochs=10, batch_size=64)
+# Train the model
+model.fit(X_train_seq, y_train_seq, epochs=10, batch_size=64)
 
 # Evaluate the model
 y_pred = model.predict(X_test_seq)
